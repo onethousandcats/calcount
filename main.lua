@@ -18,7 +18,7 @@ local back = display.newGroup()
 
 local bg = display.newRect( 0, 0, w, h )
 bg:setFillColor( 255, 255, 255 )
-bg.x = w/2; bg.y = h/2
+bg.x = w / 2; bg.y = h / 2
 bg.width = w; bg.height = h;
 
 local title = display.newText("Calor", 0, 0, "Segan", 50)
@@ -28,4 +28,10 @@ title.x, title.y = w / 2, h * .2
 local logoWidth = 50
 
 local logo = display.newImageRect( "logo.png", logoWidth, logoWidth * 1.5 )
-logo.x, logo.y = w / 2, h * .32
+logo.x, logo.y = w / 2, h * .36
+
+local settingWidth = 20
+
+local settings = display.newImageRect( "settings.png", settingWidth, settingWidth )
+settings.x, settings.y = w * .90, h * .94
+
