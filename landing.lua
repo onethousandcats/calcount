@@ -20,7 +20,12 @@ local h = display.viewableContentHeight
 
 local black = { 0, 0, 0 }
 
-local add, title, logo, settings
+function removeAllListeners(obj)
+  obj._functionListeners = nil
+  obj._tableListeners = nil
+end
+
+
 ---------------------------------------------------------------------------------
 -- BEGINNING OF YOUR IMPLEMENTATION
 ---------------------------------------------------------------------------------
@@ -35,7 +40,6 @@ function scene:createScene( event )
 	--	Example use-case: Restore 'group' from previously saved state.
 	
 	-----------------------------------------------------------------------------
-
 	title = display.newText("Calor", 0, 0, "Segan", 50)
 	title:setTextColor( black )
 	title.x, title.y = w / 2, h * .2
@@ -55,14 +59,6 @@ function scene:createScene( event )
 	settings = display.newImageRect( "settings.png", settingWidth, settingWidth )
 	settings.x, settings.y = w * .90, h * .94
 	settings:setFillColor( black )
-
-	local function gotoSettings ( event )
-		if ( event.phase == "began" ) then
-			storyboard.gotoScene( "settings" )
-		end
-	end
-
-	settings:addEventListener( "touch", gotoSettings )
 
 end
 
@@ -85,6 +81,20 @@ function scene:enterScene( event )
 
 	add:addEventListener( "touch", goToRestauarants )
 
+	local function gotoSettings ( event )
+		if ( event.phase == "began" ) then
+			storyboard.gotoScene( "settings" )
+			return true;
+		end
+	end
+
+	settings:addEventListener( "touch", gotoSettings )
+
+	transition.to( title, { time = 600, delay = 0, alpha = 1 })
+	transition.to( logo, { time = 600, delay = 0, alpha = 1 })
+	transition.to( add, { time = 600, delay = 0, alpha = 1 })
+	transition.to( settings, { time = 600, delay = 0, alpha = 1 })
+
 	
 end
 
@@ -101,6 +111,9 @@ function scene:exitScene( event )
 	transition.to( title, { time = 600, delay = 0, alpha = 0 })
 	transition.to( logo, { time = 600, delay = 0, alpha = 0 })
 	transition.to( add, { time = 600, delay = 0, alpha = 0 })
+	transition.to( settings, { time = 600, delay = 0, alpha = 0 })
+
+	removeAllListeners( add )
 end
 
 
@@ -116,6 +129,7 @@ function scene:destroyScene( event )
 	title:removeSelf()
 	logo:removeSelf()
 	add:removeSelf()
+	settings:removeSelf()
 
 end
 
