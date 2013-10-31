@@ -9,29 +9,20 @@ local storyboard = require "storyboard"
 local w = display.viewableContentWidth
 local h = display.viewableContentHeight
 
--- load scenetemplate.lua
-storyboard.gotoScene( "scenetemplate" )
-
--- Add any objects that should appear on all scenes below (e.g. tab bar, hud, etc.):
-
 local back = display.newGroup()
 
+local g = graphics.newGradient(
+	{ 46, 207, 194 },
+	{ 210, 95, 182 },
+	"down")
+
 local bg = display.newRect( 0, 0, w, h )
-bg:setFillColor( 255, 255, 255 )
+--bg:setFillColor( 0, 100, 140 )
+bg:setFillColor( g )
 bg.x = w / 2; bg.y = h / 2
 bg.width = w; bg.height = h;
 
-local title = display.newText("Calor", 0, 0, "Segan", 50)
-title:setTextColor( 0, 100, 140 )
-title.x, title.y = w / 2, h * .2
+-- load landing.lua
+storyboard.gotoScene( "landing" )
 
-local logoWidth = 50
-
-local logo = display.newImageRect( "logo.png", logoWidth, logoWidth * 1.5 )
-logo.x, logo.y = w / 2, h * .36
-
-local settingWidth = 20
-
-local settings = display.newImageRect( "settings.png", settingWidth, settingWidth )
-settings.x, settings.y = w * .90, h * .94
-
+-- Add any objects that should appear on all scenes below (e.g. tab bar, hud, etc.):
