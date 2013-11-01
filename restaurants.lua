@@ -32,6 +32,13 @@ local chevs = {}
 -- BEGINNING OF YOUR IMPLEMENTATION
 ---------------------------------------------------------------------------------
 
+local function goHome( event )
+
+	if ( event.phase == "began" ) then
+		storyboard.gotoScene( "landing" )
+	end
+end
+
 local function selectRest( event )
 
 	if ( event.phase == "began" ) then
@@ -105,6 +112,15 @@ function scene:createScene( event )
 	
 	end
 
+	local retW = 24
+
+	ret = display.newImageRect( "back_icon.png", retW, retW )
+	ret:setFillColor( 254, 254, 254 )
+	ret.x, ret.y = spacing + retW , h - spacing - retW
+	ret.alpha = 0
+
+	ret:addEventListener( "touch", goHome )
+
 	local data
 
 	local function restaurantsCallback ( event )
@@ -145,6 +161,7 @@ function scene:enterScene( event )
 	header.text = "Restaurants"
 
 	transition.to( header, { time = d, delay = d, alpha = 1 })
+	transition.to( ret, { time = d, delay = d, alpha = 1 })
 
 	for i = 1, 5, 1 do
 
@@ -170,6 +187,7 @@ function scene:exitScene( event )
 	
 	-----------------------------------------------------------------------------
 	transition.to( header, { time = d, delay = d, alpha = 0 })
+	transition.to( ret, { time = d, delay = d, alpha = 0 })
 
 	for i = 1, 5, 1 do
 		transition.to( bars[i], { time = d, delay = d + (i - 1) * 200, alpha = 0 })

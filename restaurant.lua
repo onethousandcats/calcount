@@ -23,6 +23,18 @@ local black = { 0, 0, 0 }
 
 local icons, stats = {}, {}
 
+local sPath = system.pathForFile( "settings.txt" )
+
+local f = io.open( sPath, "r" )
+
+local setArray = {}
+
+for line in f:lines() do
+	setArray[ #setArray + 1 ] = line
+end
+
+io.close(f)
+
 local ret
 
 ---------------------------------------------------------------------------------
@@ -113,6 +125,14 @@ function scene:createScene( event )
 	--add icons
 	local iconNo = 4
 
+	local values = {}
+
+	values[1] = setArray[1]
+
+	for i = 2, #setArray, 1 do
+		values[i] = math.round(setArray[i] * values[1])
+	end
+
 	for i = 1, iconNo, 1 do
 		local ico = display.newImageRect( iNames[i], icoW, icoW )
 		ico.x, ico.y = i * (w / iconNo) - (w / iconNo / 2), b.y - (b.height / 4)
@@ -121,9 +141,13 @@ function scene:createScene( event )
 
 		icons[ #icons + 1 ] = ico
 
-		local sta = display.newText("#", i * (w / iconNo) - (w / iconNo / 2) - spacing, b.y + (b.height / 8), "Segan", 18, "center")
+		local sta = display.newText(values[i], ico.x, b.y + (b.height / 8), "Segan", 18, "center")
 		sta.alpha = 0
 		sta:setTextColor( black )
+
+		--annoying, have to reset the reference point to get the text to center
+		sta:setReferencePoint( display.TopCenterReferencePoint )
+		sta.x = ico.x
 
 		stats[ #stats + 1 ] = sta
 
