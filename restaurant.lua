@@ -21,6 +21,8 @@ local h = display.viewableContentHeight
 local white = { 255, 255, 255 }
 local black = { 0, 0, 0 }
 
+local icons, stats = {}, {}
+
 local ret
 
 ---------------------------------------------------------------------------------
@@ -50,7 +52,7 @@ function scene:createScene( event )
 	local retW = h / 14
 
 	local third = (w / 3)
-	local paddingW = (third - retW) / 2 - (spacing / 2)
+	local paddingW = (third - retW) / 2
 
 	local bottomY = h - (retW / 2) 
 
@@ -99,6 +101,34 @@ function scene:createScene( event )
 	resetR.x , resetR.y = reset.x + (reset.width / 2) + (resetR.width / 2), bottomY
 	resetR.alpha = 0	
 	
+	b = display.newRect(0, 0, w, retW * 1.5)
+	b:setFillColor( 254, 254, 254 )
+	b.x , b.y = b.width / 2, h - retW - (b.height / 2) - spacing
+	b.alpha = 0	
+
+	local icoW = 20
+
+	local iNames = { "cal_icon.png", "fat_icon.png", "sod_icon.png", "chol_icon.png" }
+
+	--add icons
+	local iconNo = 4
+
+	for i = 1, iconNo, 1 do
+		local ico = display.newImageRect( iNames[i], icoW, icoW )
+		ico.x, ico.y = i * (w / iconNo) - (w / iconNo / 2), b.y - (b.height / 4)
+		ico:setFillColor( black )
+		ico.alpha = 0
+
+		icons[ #icons + 1 ] = ico
+
+		local sta = display.newText("#", i * (w / iconNo) - (w / iconNo / 2) - spacing, b.y + (b.height / 8), "Segan", 18, "center")
+		sta.alpha = 0
+		sta:setTextColor( black )
+
+		stats[ #stats + 1 ] = sta
+
+	end
+
 end
 
 
@@ -125,6 +155,13 @@ function scene:enterScene( event )
 	transition.to( retR, { time = 600, delay = 600, alpha = 1 })
 	transition.to( mealR, { time = 600, delay = 600, alpha = 1 })
 	transition.to( resetR, { time = 600, delay = 600, alpha = 1 })
+
+	transition.to( b, { time = 600, delay = 600, alpha = 1 })	
+
+	for i = 1, #icons, 1 do
+		transition.to( icons[i], { time = 600, delay = 600, alpha = 1 })		
+		transition.to( stats[i], { time = 600, delay = 800, alpha = 1 })	
+	end
 
 	local function returnToRests( event )
 		if ( event.phase == "began" ) then
@@ -160,6 +197,13 @@ function scene:exitScene( event )
 	transition.to( retR, { time = 600, delay = 600, alpha = 0 })
 	transition.to( mealR, { time = 600, delay = 600, alpha = 0 })
 	transition.to( resetR, { time = 600, delay = 600, alpha = 0 })
+
+	transition.to( b, { time = 600, delay = 600, alpha = 0 })
+
+	for i = 1, #icons, 1 do
+		transition.to( icons[i], { time = 600, delay = 600, alpha = 0 })		
+		transition.to( stats[i], { time = 600, delay = 800, alpha = 0 })	
+	end
 
 end
 
