@@ -58,7 +58,7 @@ function scene:createScene( event )
 	--	Example use-case: Restore 'group' from previously saved state.
 	
 	-----------------------------------------------------------------------------
-	bars, rests, chevs = {}, {}, {}
+	bars, rests, types, chevs = {}, {}, {}, {}
 
 	margin = h / 4
 	barH = h / 10
@@ -66,7 +66,7 @@ function scene:createScene( event )
 
 	xMar = w / 6
 
-	header = display.newText("Restaurants", xMar / 3, margin / 2, "Segan", 36, "left")
+	header = display.newText("Restaurants", xMar / 3, margin / 2, "Segan", 22)
 	header:setTextColor( black )
 	header.alpha = 0
 
@@ -74,7 +74,7 @@ function scene:createScene( event )
 		
 		--create bars
 		local bar = display.newRect(0, 0, w - spacing, barH)
-		bar:setFillColor( 255, 255, 255 )
+		bar:setFillColor( 254, 254, 254 )
 		bar.x , bar.y = w / 2, margin + (barH  + spacing / 2) * (i - 1)
 		bar.alpha = 0
 		bar.rid = i
@@ -82,14 +82,22 @@ function scene:createScene( event )
 		bars[ #bars + 1 ] = bar
 
 		--create restaurant titles
-		local rest = display.newText("loading...", xMar, bar.y - spacing, "Segan", 18, "left")
+		local rest = display.newText("loading...", xMar, bar.y - spacing * 3, "Segan", 18)
 		rest:setTextColor( black )
 		rest.alpha = 0
 
 		rests[ #rests + 1 ] = rest
 
+		--create restaurant titles
+		local t = display.newText("loading type...", xMar, bar.y + spacing, "Segan", 14)
+		t:setTextColor( black )
+		t.alpha = 0
+
+		types[ #types + 1 ] = t
+
+
 		--create chevrons
-		local c = display.newText(">", w - xMar, bar.y - spacing, "Segan", 18, "left")
+		local c = display.newText(">", w - xMar, bar.y - spacing, "Segan", 18)
 		c:setTextColor( black )
 		c.alpha = 0
 
@@ -108,6 +116,8 @@ function scene:createScene( event )
 
 			for i = 1, 5, 1 do	
 				rests[i].text = data[i]
+				rests[i]:setReferencePoint( display.TopLeftReferencePoint )
+				rests[i].x = xMar
 			end	
 		end
 		return true;
@@ -140,6 +150,7 @@ function scene:enterScene( event )
 
 		transition.to( bars[i], { time = d, delay = d + (i - 1) * 200, alpha = 1 })
 		transition.to( rests[i], { time = d, delay = d + (i - 1) * 200, alpha = 1 })
+		transition.to( types[i], { time = d, delay = d + (i - 1) * 200, alpha = 1 })
 		transition.to( chevs[i], { time = d, delay = d + (i - 1) * 200, alpha = 1 })
 
 		bars[i]:addEventListener( "touch", selectRest )
@@ -163,6 +174,7 @@ function scene:exitScene( event )
 	for i = 1, 5, 1 do
 		transition.to( bars[i], { time = d, delay = d + (i - 1) * 200, alpha = 0 })
 		transition.to( rests[i], { time = d, delay = d + (i - 1) * 200, alpha = 0 })
+		transition.to( types[i], { time = d, delay = d + (i - 1) * 200, alpha = 0 })
 		transition.to( chevs[i], { time = d, delay = d + (i - 1) * 200, alpha = 0 })
 
 		bars[i]:removeEventListener( "touch", selectRest )

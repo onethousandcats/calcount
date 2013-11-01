@@ -43,16 +43,61 @@ function scene:createScene( event )
 
 	xMar = w / 6
 
-	header = display.newText("Restaurant", xMar / 3, margin / 2, "Segan", 36, "left")
+	header = display.newText("Restaurant", xMar / 3.4, margin / 2, "Segan", 22, "left")
 	header:setTextColor( black )
 	header.alpha = 0
 
-	local retW = 20
+	local retW = h / 14
 
-	ret = display.newImageRect( "back_icon.png", retW, retW )
-	ret.x, ret.y = w * .10, h * .94
-	ret:setFillColor( black )
+	local third = (w / 3)
+	local paddingW = (third - retW) / 2 - (spacing / 2)
+
+	local bottomY = h - (retW / 2) 
+
+	ret = display.newImageRect( "back_white.png", retW, retW )
+	ret:setFillColor( 254, 254, 254 )
+	ret.x, ret.y = (w / 6), bottomY
 	ret.alpha = 0
+
+	retL = display.newRect(0, 0, paddingW, retW)
+	retL:setFillColor( 254, 254, 254 )
+	retL.x , retL.y = ret.x - (ret.width / 2) - (retL.width / 2), bottomY
+	retL.alpha = 0
+
+	retR = display.newRect(0, 0, paddingW, retW)
+	retR:setFillColor( 254, 254, 254 )
+	retR.x , retR.y = ret.x + (ret.width / 2) + (retR.width / 2), bottomY
+	retR.alpha = 0
+
+	meal = display.newImageRect( "meal_white.png", retW, retW )
+	meal:setFillColor( 254, 254, 254 )
+	meal.x, meal.y = (w / 2), bottomY
+	meal.alpha = 0
+
+	mealL = display.newRect(0, 0, paddingW, retW)
+	mealL:setFillColor( 254, 254, 254 )
+	mealL.x , mealL.y = meal.x - (meal.width / 2) - (mealL.width / 2), bottomY
+	mealL.alpha = 0
+
+	mealR = display.newRect(0, 0, paddingW, retW)
+	mealR:setFillColor( 254, 254, 254 )
+	mealR.x , mealR.y = meal.x + (meal.width / 2) + (mealR.width / 2), bottomY
+	mealR.alpha = 0
+
+	reset = display.newImageRect( "reset_white.png", retW, retW )
+	reset:setFillColor( 254, 254, 254 )
+	reset.x, reset.y = w - (w / 6), bottomY
+	reset.alpha = 0
+
+	resetL = display.newRect(0, 0, paddingW, retW)
+	resetL:setFillColor( 254, 254, 254 )
+	resetL.x , resetL.y = reset.x - (reset.width / 2) - (resetL.width / 2), bottomY
+	resetL.alpha = 0
+
+	resetR = display.newRect(0, 0, paddingW, retW)
+	resetR:setFillColor( 254, 254, 254 )
+	resetR.x , resetR.y = reset.x + (reset.width / 2) + (resetR.width / 2), bottomY
+	resetR.alpha = 0	
 	
 end
 
@@ -70,6 +115,16 @@ function scene:enterScene( event )
 	-----------------------------------------------------------------------------
 	transition.to( header, { time = 600, delay = 600, alpha = 1 })
 	transition.to( ret, { time = 600, delay = 600, alpha = 1 })
+	transition.to( meal, { time = 600, delay = 600, alpha = 1 })
+	transition.to( reset, { time = 600, delay = 600, alpha = 1 })
+
+	transition.to( retL, { time = 600, delay = 600, alpha = 1 })
+	transition.to( mealL, { time = 600, delay = 600, alpha = 1 })
+	transition.to( resetL, { time = 600, delay = 600, alpha = 1 })
+
+	transition.to( retR, { time = 600, delay = 600, alpha = 1 })
+	transition.to( mealR, { time = 600, delay = 600, alpha = 1 })
+	transition.to( resetR, { time = 600, delay = 600, alpha = 1 })
 
 	local function returnToRests( event )
 		if ( event.phase == "began" ) then
@@ -78,6 +133,8 @@ function scene:enterScene( event )
 	end
 
 	ret:addEventListener("touch", returnToRests )
+	retL:addEventListener("touch", returnToRests )
+	retR:addEventListener("touch", returnToRests )	
 
 end
 
@@ -93,7 +150,17 @@ function scene:exitScene( event )
 	-----------------------------------------------------------------------------
 	transition.to( header, { time = 600, delay = 600, alpha = 0 })
 	transition.to( ret, { time = 600, delay = 600, alpha = 0 })
-	
+	transition.to( meal, { time = 600, delay = 600, alpha = 0 })
+	transition.to( reset, { time = 600, delay = 600, alpha = 0 })
+
+	transition.to( retL, { time = 600, delay = 600, alpha = 0 })
+	transition.to( mealL, { time = 600, delay = 600, alpha = 0 })
+	transition.to( resetL, { time = 600, delay = 600, alpha = 0 })
+
+	transition.to( retR, { time = 600, delay = 600, alpha = 0 })
+	transition.to( mealR, { time = 600, delay = 600, alpha = 0 })
+	transition.to( resetR, { time = 600, delay = 600, alpha = 0 })
+
 end
 
 
@@ -103,12 +170,6 @@ function scene:destroyScene( event )
 
 	header:removeSelf()
 	ret:removeSelf()
-	
-	-----------------------------------------------------------------------------
-	
-	--	INSERT code here (e.g. remove listeners, widgets, save state, etc.)
-	
-	-----------------------------------------------------------------------------
 	
 end
 
