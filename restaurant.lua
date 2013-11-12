@@ -5,6 +5,7 @@
 ----------------------------------------------------------------------------------
 
 local storyboard = require( "storyboard" )
+local json = require( "json" )
 local scene = storyboard.newScene()
 
 ----------------------------------------------------------------------------------
@@ -37,9 +38,21 @@ io.close(f)
 
 local ret
 
+local d = 600
+
+local bars, rests, types, adds = {}, {}, {}, {}
+
 ---------------------------------------------------------------------------------
 -- BEGINNING OF YOUR IMPLEMENTATION
 ---------------------------------------------------------------------------------
+
+local function selectItem( event )
+
+	if ( event.phase == "began" ) then
+
+		print("selected")
+	end
+end
 
 -- Called when the scene's view does not exist:
 function scene:createScene( event )
@@ -55,11 +68,49 @@ function scene:createScene( event )
 	barH = h / 10
 	spacing = h / 100
 
-	xMar = w / 6
+	xMar = w / 12
 
-	header = display.newText("Restaurant", xMar / 3.4, margin / 2, "Segan", 22, "left")
+	header = display.newText("Restaurant", xMar, margin / 2, "Segan", 22, "left")
 	header:setTextColor( black )
 	header.alpha = 0
+
+	--create body
+	for i = 1, 5, 1 do
+		
+		--create bars
+		local bar = display.newRect(0, 0, w - spacing, barH)
+		bar:setFillColor( 254, 254, 254 )
+		bar.x , bar.y = w / 2, margin + (barH  + spacing / 2) * (i - 1)
+		bar.alpha = 0
+		bar.rid = i
+
+		bars[ #bars + 1 ] = bar
+
+		--create restaurant titles
+		local rest = display.newText("loading item...", xMar, bar.y - spacing * 3, "Segan", 18)
+		rest:setTextColor( black )
+		rest.alpha = 0
+
+		rests[ #rests + 1 ] = rest
+
+		--create restaurant titles
+		local t = display.newText("loading information...", xMar, bar.y + spacing, "Segan", 14)
+		t:setTextColor( black )
+		t.alpha = 0
+
+		types[ #types + 1 ] = t
+
+
+		--create chevrons
+		local a = display.newText("+", w - xMar, bar.y - spacing, "Segan", 24)
+		a:setTextColor( black )
+		a.alpha = 0
+
+		adds[ #adds + 1 ] = c
+	
+	end
+	--
+
 
 	local retW = h / 14
 
@@ -161,12 +212,33 @@ function scene:enterScene( event )
 	local group = self.view
 	print("called")
 	header.text = event.params.name
+	local rid = event.params.id
+
+	local data
+
+	local function menuCallback ( event )
+		if ( event.isError ) then
+			print( "Error occurred in callback." )
+		else
+			print ( "RESPONSE:" .. event.response )
+			data = json.decode( event.response )
+
+			for i = 1, 5, 1 do	
+				rests[ i ].text = data[i]
+				rests[i]:setReferencePoint( display.TopLeftReferencePoint )
+				rests[i].x = xMar
+			end	
+		end
+		return true;
+	end
+
+	local function getMenu ( event )
+		local url = "http://unname00.w08.wh-2.com/api/menu/" .. rid
+		network.request( url, "GET", menuCallback )
+	end
+
+	getMenu()	
 	
-	-----------------------------------------------------------------------------
-		
-	--	INSERT code here (e.g. start timers, load audio, start listeners, etc.)
-	
-	-----------------------------------------------------------------------------
 	transition.to( header, { time = 600, delay = 600, alpha = 1 })
 	transition.to( ret, { time = 600, delay = 600, alpha = 1 })
 	transition.to( meal, { time = 600, delay = 600, alpha = 1 })
@@ -191,6 +263,17 @@ function scene:enterScene( event )
 		if ( event.phase == "began" ) then
 			storyboard.gotoScene( "restaurants" )
 		end
+	end
+
+	for i = 1, 5, 1 do
+
+		transition.to( bars[i], { time = d, delay = d + (i - 1) * 200, alpha = 1 })
+		transition.to( rests[i], { time = d, delay = d + (i - 1) * 200, alpha = 1 })
+		transition.to( types[i], { time = d, delay = d + (i - 1) * 200, alpha = 1 })
+		transition.to( adds[i], { time = d, delay = d + (i - 1) * 200, alpha = 1 })
+
+		--adds[i]:addEventListener( "touch", selectItem )
+
 	end
 
 	ret:addEventListener("touch", returnToRests )
@@ -228,6 +311,13 @@ function scene:exitScene( event )
 		transition.to( icons[i], { time = 600, delay = 600, alpha = 0 })		
 		transition.to( stats[i], { time = 600, delay = 800, alpha = 0 })	
 	end
+
+	for i = 1, 5, 1 do
+		transition.to( bars[i], { time = d, delay = d + (i - 1) * 200, alpha = 0 })
+		transition.to( rests[i], { time = d, delay = d + (i - 1) * 200, alpha = 0 })
+		transition.to( types[i], { time = d, delay = d + (i - 1) * 200, alpha = 0 })
+		transition.to( adds[i], { time = d, delay = d + (i - 1) * 200, alpha = 0 })
+	end 
 
 end
 

@@ -47,7 +47,8 @@ local function selectRest( event )
 		{
 			params = 
 			{
-				name = rests[ event.target.rid ].text
+				name = rests[ event.target.rid ].text,
+				id = event.target.rid
 			}
 		}
 
@@ -71,9 +72,9 @@ function scene:createScene( event )
 	barH = h / 10
 	spacing = h / 100
 
-	xMar = w / 6
+	xMar = w / 12
 
-	header = display.newText("Restaurants", xMar / 3, margin / 2, "Segan", 22)
+	header = display.newText("Restaurants", xMar, margin / 2, "Segan", 22)
 	header:setTextColor( black )
 	header.alpha = 0
 
